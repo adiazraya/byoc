@@ -94,7 +94,7 @@ if ($org -and $org.status -eq 0 -and $org.result.connectedStatus -eq 'Connected'
 
 Write-Host ''
 if ($script:Fails -eq 0) {
-    Write-Host 'All checks passed. Continue with docs/04-run-locally.md.' -ForegroundColor Green
+    Write-Host 'All checks passed. Continue with your use case (see README, Part 2).' -ForegroundColor Green
     exit 0
 }
 Write-Host "$($script:Fails) check(s) failed. Fix them and run .\verify.ps1 again." -ForegroundColor Yellow

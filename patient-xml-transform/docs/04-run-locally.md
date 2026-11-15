@@ -1,5 +1,7 @@
 # 4. Run the script locally
 
+**Use case 1: Patient vaccination XML** · [All use cases](../../README.md#part-2-use-cases)
+
 [← 3. Prepare the data](03-prepare-data.md) · Next: [5. Package and deploy →](05-package-and-deploy.md)
 
 > **Labels:** 🔧 **Technical** = the same for any Code Extension. 🩺 **Use case** = specific to the patient-XML example. See [step 3](03-prepare-data.md) for the full legend.
@@ -12,7 +14,7 @@ You'll run the script on your laptop against the real data in your org. This cat
 
 The script has a technical skeleton, which you reuse, and use-case logic, which you replace. This table separates them:
 
-| Part of [`entrypoint.py`](../patient-xml-transform/payload/entrypoint.py) | What it does | Label |
+| Part of [`entrypoint.py`](../payload/entrypoint.py) | What it does | Label |
 |---|---|---|
 | `SOURCE_DLO`, `TARGET_DLO` constants | Names the DLOs to read and write. `scan` reads them to build `config.json` permissions | 🔧 pattern, 🩺 names |
 | `Client()` and `client.read_dlo(SOURCE_DLO)` | Opens the SDK client and reads the source DLO as a Spark DataFrame | 🔧 |
@@ -29,7 +31,7 @@ For your own example, keep the 🔧 lines, and replace the 🩺 ones with your o
 
 🔧 **Technical:** the same for any Code Extension.
 
-Enter the environment first ([Setup, Part B](01-setup.md#part-b-every-new-terminal)), then run the script from the **package folder**. Everything in this step is the same for any Code Extension: only the entrypoint path changes.
+Enter the environment first ([Setup, Part B](../../docs/01-setup.md#part-b-every-new-terminal)), then run the script from the **package folder**. Everything in this step is the same for any Code Extension: only the entrypoint path changes.
 
 macOS:
 
@@ -122,9 +124,9 @@ The parsing logic itself (🩺 use case) didn't change.
 >
 > **You may face:** `Column 'RawXml__c' not found. Did you mean 'rawxml__c'? Data Cloud columns must be lowercase.` Code must use lowercase column names. The DLO's field is `RawXml__c` in the UI, but in code it's `rawxml__c`.
 >
-> **You may face:** `[JAVA_GATEWAY_EXITED] Java gateway process exited before sending its port number`, or `spark-class: … CMD: bad array subscript`. Spark couldn't start a JVM because Java 17 isn't on `JAVA_HOME`. Run `source ./env.sh` (or `. .\env.ps1`) in this terminal. See [Setup, Step 7](01-setup.md#step-7-java-17-azul-zulu).
+> **You may face:** `[JAVA_GATEWAY_EXITED] Java gateway process exited before sending its port number`, or `spark-class: … CMD: bad array subscript`. Spark couldn't start a JVM because Java 17 isn't on `JAVA_HOME`. Run `source ./env.sh` (or `. .\env.ps1`) in this terminal. See [Setup, Step 7](../../docs/01-setup.md#step-7-java-17-azul-zulu).
 >
-> **You may face:** `PythonVersionMismatch`, or `PackageNotInstalled` for `salesforce-data-customcode`. The venv isn't active in this terminal, or it has no pip. See [Setup, Step 5](01-setup.md#step-5-clone-the-lab-and-create-the-python-311-environment).
+> **You may face:** `PythonVersionMismatch`, or `PackageNotInstalled` for `salesforce-data-customcode`. The venv isn't active in this terminal, or it has no pip. See [Setup, Step 5](../../docs/01-setup.md#step-5-clone-the-lab-and-create-the-python-311-environment).
 >
 > **You may face:** `ModuleNotFoundError` for a package your script imports. `--dependencies` won't help: it takes comma-separated **import** names (`yaml`, not `pyyaml`) and **installs nothing**. Each module must already be installed in the venv (`uv pip install <package>`). This lab's script needs no extra packages.
 >

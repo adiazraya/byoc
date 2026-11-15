@@ -1,6 +1,8 @@
 # 3. Prepare the data: source and target DLOs
 
-[← 2. Authorize your org](02-authorize-org.md) · Next: [4. Run locally →](04-run-locally.md)
+**Use case 1: Patient vaccination XML** · [All use cases](../../README.md#part-2-use-cases)
+
+[← 2. Authorize your org](../../docs/02-authorize-org.md) · Next: [4. Run locally →](04-run-locally.md)
 
 > **How to read the labels in this lab**
 >
@@ -32,7 +34,7 @@ Vaccination records arrive as XML, one **clinic batch** per row, in a text field
 </ClinicBatch>
 ```
 
-In that shape you can't segment, filter or search the data. The script ([`payload/entrypoint.py`](../patient-xml-transform/payload/entrypoint.py)) reads every batch, parses the XML and writes **one row per `<Patient>`** to the target DLO, with these derived fields:
+In that shape you can't segment, filter or search the data. The script ([`payload/entrypoint.py`](../payload/entrypoint.py)) reads every batch, parses the XML and writes **one row per `<Patient>`** to the target DLO, with these derived fields:
 
 | Target field | How it's derived |
 |---|---|
@@ -43,7 +45,7 @@ In that shape you can't segment, filter or search the data. The script ([`payloa
 | `most_recent_vaccination_date__c` | Latest `<Date>` (several date formats accepted) |
 | `has_covid_vaccine__c` | `Yes` if any vaccine name contains "covid", otherwise `No` |
 
-The sample file [`data/patients_raw_xml.csv`](../patient-xml-transform/data/patients_raw_xml.csv) has **4 batches** with **12 patients** in total. All of the data is fictional.
+The sample file [`data/patients_raw_xml.csv`](../data/patients_raw_xml.csv) has **4 batches** with **12 patients** in total. All of the data is fictional.
 
 ## The technical rules behind this page
 
@@ -149,4 +151,4 @@ SELECT COUNT(*) AS patients FROM "Patients_Enriched__dll";  -- expected: 0 (noth
 
 ---
 
-[← 2. Authorize your org](02-authorize-org.md) · Next: [4. Run locally →](04-run-locally.md)
+[← 2. Authorize your org](../../docs/02-authorize-org.md) · Next: [4. Run locally →](04-run-locally.md)

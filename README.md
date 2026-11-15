@@ -134,13 +134,13 @@ Pattern: **one source DLO → one target DLO, one input row becomes many output 
 
 ### Steps
 
-Do [Part 1](#part-1-general-introduction) first.
+Do [Part 1](#part-1-general-introduction) first. This use case's docs live in its own folder, [`patient-xml-transform/docs/`](patient-xml-transform/docs/), and continue the numbering from step 3.
 
 | Step | Doc | What you do | Type | Time |
 |---|---|---|---|---|
-| 3 | [docs/03-prepare-data.md](docs/03-prepare-data.md) | Upload the sample CSV (data stream and source DLO) and create the target DLO | 🩺 | 15 min |
-| 4 | [docs/04-run-locally.md](docs/04-run-locally.md) | Run the script on your laptop against the real data | 🔧 | 10 min |
-| 5 | [docs/05-package-and-deploy.md](docs/05-package-and-deploy.md) | Scan, zip, deploy, run the batch data transform, check results and logs | 🔧 (validation 🩺) | 20 min |
+| 3 | [03-prepare-data.md](patient-xml-transform/docs/03-prepare-data.md) | Upload the sample CSV (data stream and source DLO) and create the target DLO | 🩺 | 15 min |
+| 4 | [04-run-locally.md](patient-xml-transform/docs/04-run-locally.md) | Run the script on your laptop against the real data | 🔧 | 10 min |
+| 5 | [05-package-and-deploy.md](patient-xml-transform/docs/05-package-and-deploy.md) | Scan, zip, deploy, run the batch data transform, check results and logs | 🔧 (validation 🩺) | 20 min |
 
 **Expected result:** 4 clinic batches in, 12 patient rows out, with the COVID flag at Yes = 5 and No = 7.
 
@@ -152,7 +152,7 @@ The sample data in `patient-xml-transform/data/` is **fictional**: the names, da
 
 ## Adding a new use case
 
-Each new use case gets its own package folder next to `patient-xml-transform/`, with its own sample data, `payload/entrypoint.py` and `config.json`, and its own **architecture** section in this README. It reuses Part 1 as it is. In its docs, keep the 🔧 steps and write new 🩺 steps: the data and DLOs, the logic in `entrypoint.py` (the table in [step 4](docs/04-run-locally.md#step-1-know-what-the-script-does) shows which parts of a script are reusable), the `--name` and `--description` you deploy with, and the expected results.
+Each new use case gets its own folder next to `patient-xml-transform/`, with the same structure: sample data, `payload/entrypoint.py` and `config.json`, and its own `docs/` folder. Its docs **start at `03`** (`03-prepare-data.md`, `04-run-locally.md`, `05-package-and-deploy.md`), because steps 1 and 2 are the shared Part 1. It also gets its own **architecture** section in this README. It reuses Part 1 as it is. In its docs, keep the 🔧 steps and write new 🩺 steps: the data and DLOs, the logic in `entrypoint.py` (the table in [step 4](patient-xml-transform/docs/04-run-locally.md#step-1-know-what-the-script-does) shows which parts of a script are reusable), the `--name` and `--description` you deploy with, and the expected results.
 
 ## Repository layout
 
@@ -161,18 +161,20 @@ Each new use case gets its own package folder next to `patient-xml-transform/`, 
 ├── README.md                       This page: general introduction + use case catalog
 │
 │   Part 1: general (every use case)
-├── docs/01-setup.md                One-time install + per-terminal environment
-├── docs/02-authorize-org.md        Connect your org to the CLI
-├── docs/troubleshooting.md         All errors and fixes
+├── docs/
+│   ├── 01-setup.md                 One-time install + per-terminal environment
+│   ├── 02-authorize-org.md         Connect your org to the CLI
+│   └── troubleshooting.md          All errors and fixes
 ├── env.sh / env.ps1                Enter the project environment in one command
 ├── verify.sh / verify.ps1          Preflight check (tools, versions, org connection)
 │
-│   Part 2, use case 1: patient vaccination XML
-├── docs/03-prepare-data.md         Data stream, source and target DLOs
-├── docs/04-run-locally.md          Local run
-├── docs/05-package-and-deploy.md   Scan, zip, deploy, transform, validation, logs
-├── docs/images/                    Screenshots
+│   Part 2, use case 1: patient vaccination XML (one folder per use case)
 └── patient-xml-transform/          The Code Extension package; run all sf commands from here
+    ├── docs/                       This use case's steps, numbered from 03
+    │   ├── 03-prepare-data.md      Data stream, source and target DLOs
+    │   ├── 04-run-locally.md       Local run
+    │   ├── 05-package-and-deploy.md  Scan, zip, deploy, transform, validation, logs
+    │   └── images/                 Screenshots
     ├── .datacustomcode_proj/       Package marker (type: script). Keep it
     ├── payload/
     │   ├── entrypoint.py           The transform

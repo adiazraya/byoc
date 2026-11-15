@@ -1,6 +1,6 @@
 # 2. Authorize your Data 360 org
 
-[← 1. Setup](01-setup.md) · Next: [3. Prepare the data →](03-prepare-data.md)
+[← 1. Setup](01-setup.md) · Next: [Pick a use case →](../README.md#part-2-use-cases)
 
 The Code Extension plugin uses the org session that Salesforce CLI has saved. You authorize once, and every `run` and `deploy` reuses that session through `--target-org`. You don't need a connected app or an External Client App for this path.
 
@@ -85,4 +85,4 @@ The CLI login only proves that your user can log in. The local run also calls Da
 
 ---
 
-[← 1. Setup](01-setup.md) · Next: [3. Prepare the data →](03-prepare-data.md)
+[← 1. Setup](01-setup.md) · Next: [Pick a use case →](../README.md#part-2-use-cases)

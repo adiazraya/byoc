@@ -1,6 +1,8 @@
 # 5. Package, deploy, run and monitor
 
-[← 4. Run locally](04-run-locally.md) · Next: [Troubleshooting →](troubleshooting.md)
+**Use case 1: Patient vaccination XML** · [All use cases](../../README.md#part-2-use-cases)
+
+[← 4. Run locally](04-run-locally.md) · Next: [Troubleshooting →](../../docs/troubleshooting.md)
 
 > **Labels:** 🔧 **Technical** = the same for any Code Extension. 🩺 **Use case** = specific to the patient-XML example. See [step 3](03-prepare-data.md) for the full legend. Almost everything on this page is 🔧. The only 🩺 parts are the names you choose when deploying and the expected results you validate.
 
@@ -190,7 +192,7 @@ Official reference: [Monitor Deployments and Execution History](https://develope
 
 🩺 **Use case:** specific to the patient example. Replace it in your own.
 
-These expected numbers belong to the patient example. Open **Data 360 → Query Editor**, choose the `default` data space and run the queries in [`queries/validate-results.sql`](../patient-xml-transform/queries/validate-results.sql). They return counts and IDs, not patient details.
+These expected numbers belong to the patient example. Open **Data 360 → Query Editor**, choose the `default` data space and run the queries in [`queries/validate-results.sql`](../queries/validate-results.sql). They return counts and IDs, not patient details.
 
 | Query | Expected |
 |---|---|
@@ -265,4 +267,4 @@ Official reference: [Delete Deployment](https://developer.salesforce.com/docs/da
 
 ---
 
-[← 4. Run locally](04-run-locally.md) · Next: [Troubleshooting →](troubleshooting.md)
+[← 4. Run locally](04-run-locally.md) · Next: [Troubleshooting →](../../docs/troubleshooting.md)

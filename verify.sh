@@ -102,7 +102,7 @@ fi
 
 echo
 if [ "$FAILS" -eq 0 ]; then
-  echo "All checks passed. Continue with docs/04-run-locally.md."
+  echo "All checks passed. Continue with your use case (see README, Part 2)."
   exit 0
 fi
 echo "$FAILS check(s) failed. Fix them and run ./verify.sh again."
