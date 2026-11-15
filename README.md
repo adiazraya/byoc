@@ -1,18 +1,115 @@
 # Bring Your Own Code: Data 360 Code Extension hands-on lab
 
-Turn raw clinic XML into clean, query-ready patient rows with a Python script that runs **inside Data 360**.
+Run your own Python code **inside Data 360**. Read data from a Data Lake Object, transform it with logic you write, and write the result to another Data Lake Object.
 
-You'll build the full Code Extension workflow on your own org: set up an isolated environment, run the script locally against real Data 360 data, then package it, deploy it and run it as a batch data transform.
+This repository has two parts:
+
+1. **General introduction (common to every use case).** What Code Extension is, how it works, and the one-time setup of your laptop and org.
+2. **Use cases.** Each use case is a complete, hands-on example with its own business problem, sample data, architecture, code and steps. **The first one is the patient vaccination XML transform.** More use cases will follow, each with its own architecture.
+
+```
+                    ┌──────────────────────────────────────────────┐
+                    │  Part 1: General introduction (do it once)   │
+                    │  What Code Extension is · setup · org login  │
+                    └──────────────────────┬───────────────────────┘
+                                           │
+               ┌───────────────────────────┼───────────────────────────┐
+               ▼                           ▼                           ▼
+   ┌───────────────────────┐   ┌───────────────────────┐   ┌───────────────────────┐
+   │ Use case 1: Patient   │   │ Use case 2            │   │ Use case …            │
+   │ vaccination XML       │   │ coming soon           │   │                       │
+   │ own data, architecture│   │ own data, architecture│   │ own data, architecture│
+   │ code and steps        │   │ code and steps        │   │ code and steps        │
+   └───────────────────────┘   └───────────────────────┘   └───────────────────────┘
+```
+
+---
+
+# Part 1: General introduction
+
+This part applies to **every** use case. Read it first, and do the setup once.
+
+## What is Code Extension?
+
+Code Extension (also called *Bring Your Own Code*) lets you package a Python 3.11 script and run it in Data 360 as a **batch data transform**. You use it when the built-in transforms can't express your logic: parsing nested formats, custom cleansing, complex derivations and so on.
+
+Every script follows the same pattern, whatever the use case:
+
+```
+                 ┌──────────────────────────────────────────┐
+  Source DLO ───▶│  payload/entrypoint.py                   │───▶ Target DLO
+  client.read_dlo│  Python 3.11 + PySpark + YOUR logic       │     client.write_to_dlo
+                 └──────────────────────────────────────────┘
+                     config.json declares the data space and
+                     which DLOs the script may read and write
+```
+
+You work with the script in two modes:
+
+| Mode | Command | Where it runs | What it does with the target DLO |
+|---|---|---|---|
+| **Develop locally** | `sf data-code-extension script run` | Spark on your laptop, reading **real data** from your org | Checks the columns exist, then **prints** the result. Nothing is written |
+| **Run in Data 360** | `scan` → `zip` → `deploy`, then **Run Now** on the data transform | Inside Data 360, on the compute size you choose | **Writes** the target DLO. Logs go to `DataCustomCodeLogs__dll` |
+
+## The general workflow
+
+These steps are the same for every use case. Only the data, the objects and the logic change.
+
+```
+ Once:          1. Set up your laptop  ──▶  2. Authorize your org
+                                                     │
+ Per use case:  3. Prepare the data (source + target DLOs)
+                4. Run the script locally
+                5. Package, deploy, run the data transform and validate
+```
+
+| Step | Doc | What you do | Time |
+|---|---|---|---|
+| 1 | [docs/01-setup.md](docs/01-setup.md) | **Part A (once):** install the CLI, the plugin, uv, Python 3.11 and Java 17 without touching your system defaults. **Part B (every new terminal):** one command to re-enter the environment | 20–30 min |
+| 2 | [docs/02-authorize-org.md](docs/02-authorize-org.md) | Connect your Data 360 org to the CLI as `byoc-org` | 5 min |
+| – | [docs/troubleshooting.md](docs/troubleshooting.md) | Every error we hit while building this lab, with the fix | – |
+
+**Opening a new terminal later?** Don't reinstall anything. From the repository root, run `source ./env.sh` (macOS) or `. .\env.ps1` (Windows). That's [Part B of the setup](docs/01-setup.md#part-b-every-new-terminal). Run `./verify.sh` (macOS) or `.\verify.ps1` (Windows) at any point to check your environment.
+
+## Technical steps vs use-case steps
+
+Inside the use-case docs, every section carries one of two labels:
+
+- 🔧 **Technical:** how Code Extension works. It's identical in every use case: running locally, scan, zip, deploy, data transform, logs.
+- 🩺 **Use case:** specific to that use case: its sample data, DLO names and fields, the logic in `entrypoint.py`, and the expected results.
+
+When you move from one use case to the next, the 🔧 parts stay the same and the 🩺 parts change.
+
+## Before you start
+
+- A Data 360 org (Developer, Enterprise, Performance or Unlimited edition) where you're an admin, with **Code Extension** enabled in Feature Manager and the **Data Cloud Architect** permission set. Details are in [docs/01-setup.md](docs/01-setup.md#org-prerequisites).
+- macOS or Windows, with permission to install tools.
+- No prior Code Extension knowledge.
+
+---
+
+# Part 2: Use cases
+
+Each use case has its own business problem, sample data, architecture, package folder and steps. Do [Part 1](#part-1-general-introduction) first, then pick a use case.
+
+| # | Use case | What the script does | Package folder | Status |
+|---|---|---|---|---|
+| 1 | [Patient vaccination XML](#use-case-1-patient-vaccination-xml) | Parses nested XML clinic batches into one clean row per patient, with derived fields | [`patient-xml-transform/`](patient-xml-transform/) | Available |
+| 2 | *To be announced* | | | Coming soon |
+
+## Use case 1: Patient vaccination XML
 
 > Based on an internal Salesforce demo kit. Its code and instructions have been corrected and expanded here into a lab that runs end to end on macOS and Windows.
 
-## The use case
+### The business problem
 
 A healthcare provider sends vaccination records as dense, nested XML. Each row in Data 360 is one **clinic batch** holding several patients, with names, dates of birth and vaccination histories buried in markup. In that shape you can't segment, filter or search the data. For example, you can't find "patients over 60 with no COVID vaccine", because age isn't a field and the vaccine list is inside a string.
 
+### The solution
+
 The script parses each XML blob, creates one row per `<Patient>` and derives clean fields: age, a standardized vaccine list, the most recent vaccination date and a COVID yes/no flag.
 
-## Architecture
+### Architecture of this use case
 
 ```
  Source DLO: Patients_Raw_XML__dll                Target DLO: Patients_Enriched__dll
@@ -26,64 +123,64 @@ The script parses each XML blob, creates one row per `<Patient>` and derives cle
                   │ client.read_dlo()                                │ client.write_to_dlo(OVERWRITE)
                   ▼                                                  │
         ┌────────────────────────────────────────────────────────────┴───┐
-        │ payload/entrypoint.py  (Python 3.11 + PySpark, Code Extension)  │
+        │ patient-xml-transform/payload/entrypoint.py                     │
         │   parse XML → one dict per <Patient> → derive fields → Spark DF │
         └─────────────────────────────────────────────────────────────────┘
-          Local:    sf data-code-extension script run   (Spark on your laptop, prints result)
-          Deployed: batch data transform in Data 360    (writes the target DLO)
+          Data in:   CSV file upload (data stream) → source DLO
+          Runs as:   Code Extension "Patient_Data_Transformer" + batch data transform
 ```
 
-## Lab path
+Pattern: **one source DLO → one target DLO, one input row becomes many output rows** (flatten/explode).
+
+### Steps
+
+Do [Part 1](#part-1-general-introduction) first.
 
 | Step | Doc | What you do | Type | Time |
 |---|---|---|---|---|
-| 1 | [docs/01-setup.md](docs/01-setup.md) | **Part A (once):** install the CLI, the plugin, uv, Python 3.11 and Java 17 without touching your system defaults. **Part B (every new terminal):** one command to re-enter the environment | 🔧 | 20–30 min |
-| 2 | [docs/02-authorize-org.md](docs/02-authorize-org.md) | Connect your Data 360 org to the CLI as `byoc-org` | 🔧 | 5 min |
 | 3 | [docs/03-prepare-data.md](docs/03-prepare-data.md) | Upload the sample CSV (data stream and source DLO) and create the target DLO | 🩺 | 15 min |
 | 4 | [docs/04-run-locally.md](docs/04-run-locally.md) | Run the script on your laptop against the real data | 🔧 | 10 min |
 | 5 | [docs/05-package-and-deploy.md](docs/05-package-and-deploy.md) | Scan, zip, deploy, run the batch data transform, check results and logs | 🔧 (validation 🩺) | 20 min |
-| – | [docs/troubleshooting.md](docs/troubleshooting.md) | Every error we hit while building this lab, with the fix | – | – |
 
-### 🔧 Technical vs 🩺 use case
+**Expected result:** 4 clinic batches in, 12 patient rows out, with the COVID flag at Yes = 5 and No = 7.
 
-Every step and section in the docs carries one of two labels:
+### Data and safety
 
-- 🔧 **Technical:** how Code Extension works. It's identical for any example: environment, org login, running locally, scan, zip, deploy, transform, logs.
-- 🩺 **Use case:** specific to the patient-XML example: the sample CSV, the DLO names and fields, the parsing logic, the expected results (4 batches, 12 patients, COVID Yes = 5 / No = 7).
+The sample data in `patient-xml-transform/data/` is **fictional**: the names, dates of birth and vaccinations aren't real people. Even so, the lab follows the same rules you'd follow with real data. The script never prints record contents, and the validation queries return counts and IDs only. Code Extension logs land in the `DataCustomCodeLogs__dll` DLO, which **data governance policies don't cover**, so anything your code prints can be read by anyone with access to that DLO.
 
-**Building your own example?** Keep everything marked 🔧. Replace what's marked 🩺: the data and source DLO (step 3), the target DLO and its fields (step 3), the logic in `payload/entrypoint.py` (the table in [step 4](docs/04-run-locally.md#step-1-know-what-the-script-does) shows which parts), the `--name` and `--description` when you deploy, and the expected results you validate.
+---
 
-**Opening a new terminal later?** Don't reinstall anything. From the repository root, run `source ./env.sh` (macOS) or `. .\env.ps1` (Windows). That's [Part B of the setup](docs/01-setup.md#part-b-every-new-terminal).
+## Adding a new use case
 
-Run `./verify.sh` (macOS) or `.\verify.ps1` (Windows) at any point to check your environment.
+Each new use case gets its own package folder next to `patient-xml-transform/`, with its own sample data, `payload/entrypoint.py` and `config.json`, and its own **architecture** section in this README. It reuses Part 1 as it is. In its docs, keep the 🔧 steps and write new 🩺 steps: the data and DLOs, the logic in `entrypoint.py` (the table in [step 4](docs/04-run-locally.md#step-1-know-what-the-script-does) shows which parts of a script are reusable), the `--name` and `--description` you deploy with, and the expected results.
 
 ## Repository layout
 
 ```
 .
-├── README.md
-├── docs/                         Lab instructions (start with 01-setup.md); images/ holds the screenshots
-├── env.sh / env.ps1              Enter the project environment in one command
-├── verify.sh / verify.ps1        Preflight check (tools, versions, org connection)
-└── patient-xml-transform/        The Code Extension package; run all sf commands from here
-    ├── .datacustomcode_proj/     Package marker (type: script). Keep it
+├── README.md                       This page: general introduction + use case catalog
+│
+│   Part 1: general (every use case)
+├── docs/01-setup.md                One-time install + per-terminal environment
+├── docs/02-authorize-org.md        Connect your org to the CLI
+├── docs/troubleshooting.md         All errors and fixes
+├── env.sh / env.ps1                Enter the project environment in one command
+├── verify.sh / verify.ps1          Preflight check (tools, versions, org connection)
+│
+│   Part 2, use case 1: patient vaccination XML
+├── docs/03-prepare-data.md         Data stream, source and target DLOs
+├── docs/04-run-locally.md          Local run
+├── docs/05-package-and-deploy.md   Scan, zip, deploy, transform, validation, logs
+├── docs/images/                    Screenshots
+└── patient-xml-transform/          The Code Extension package; run all sf commands from here
+    ├── .datacustomcode_proj/       Package marker (type: script). Keep it
     ├── payload/
-    │   ├── entrypoint.py         The transform
-    │   └── config.json           Dataspace and read/write permissions (generated by scan)
-    ├── requirements.txt          Python packages for the deployed code (none needed)
-    ├── data/patients_raw_xml.csv Sample data: 4 clinic batches, 12 patients
-    └── queries/validate-results.sql
+    │   ├── entrypoint.py           The transform
+    │   └── config.json             Data space and read/write permissions (generated by scan)
+    ├── requirements.txt            Python packages for the deployed code (none needed)
+    ├── data/patients_raw_xml.csv   Sample data: 4 clinic batches, 12 patients
+    └── queries/                    Validation and log queries
 ```
-
-## Before you start
-
-- A Data 360 org (Developer, Enterprise, Performance or Unlimited edition) where you're an admin, with **Code Extension** enabled in Feature Manager and the **Data Cloud Architect** permission set. Details are in [docs/01-setup.md](docs/01-setup.md#org-prerequisites).
-- macOS or Windows, with permission to install tools.
-- No prior Code Extension knowledge.
-
-## Data and safety
-
-The sample data in `patient-xml-transform/data/` is **fictional**: the names, dates of birth and vaccinations aren't real people. Even so, the lab follows the same rules you'd follow with real data. The script never prints record contents, and the validation queries return counts and IDs only. Code Extension logs land in the `DataCustomCodeLogs__dll` DLO, which **data governance policies don't cover**, so anything your code prints can be read by anyone with access to that DLO.
 
 ## Official references
 
