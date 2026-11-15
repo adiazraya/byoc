@@ -172,7 +172,7 @@ Official reference: [Write and Validate Custom Scripts](https://developer.salesf
 >
 > **You may face:** `PythonVersionMismatch`, or `PackageNotInstalled` for `salesforce-data-customcode`. The venv isn't active in this terminal, or it has no pip. See [Setup, Step 5](01-setup.md#step-5-clone-the-lab-and-create-the-python-311-environment).
 >
-> **You may face:** `ModuleNotFoundError` for a package your script imports. `--dependencies` won't help: it takes comma-separated **import** names (`yaml`, not `pyyaml`) and **installs nothing**. Each module must already be installed in the venv (`uv pip install <package>`). Add the package to `requirements.txt` too, so the deployed code gets it ([step 4](04-package-and-deploy.md#if-your-script-needs-extra-packages-docker)).
+> **You may face:** `ModuleNotFoundError` for a package your script imports. `--dependencies` won't help: it takes comma-separated **import** names (`yaml`, not `pyyaml`) and **installs nothing**. Each module must already be installed in the venv (`uv pip install <package>`). This lab's script needs no extra packages.
 >
 > **You may face:** the error output suggests `Run 'sf data-code-extension <type> scan'`, and running it in zsh gives `no such file or directory: type`. `<type>` is a placeholder, and the shell reads `<` as a redirect. The real command is `sf data-code-extension script scan --entrypoint ./payload/entrypoint.py`.
 >

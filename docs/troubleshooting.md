@@ -53,8 +53,6 @@ Every error we hit while building this lab, grouped by stage. Before anything el
 |---|---|---|
 | `PipreqsScanError: Failed to scan imports using pipreqs` | `pipreqs` not in the venv | `uv pip install pipreqs`, or `scan --no-requirements` |
 | `dataspace must be defined` | `dataspace` key missing from `config.json` | Add `"dataspace": "default"` |
-| `Building docker image…` then `ZipExecutionFailed … './payload':` with an empty reason | `requirements.txt` lists a package and Docker isn't installed or running | Start Docker Desktop, or empty `requirements.txt` |
-| `DependencyBuildFileMissing` | `build_native_dependencies.sh` / `Dockerfile.dependencies` deleted | Restore them in the package folder |
 | `[CdpCustomCodeDeployment]` feature not enabled | Code Extension off in Feature Manager | Enable it and deploy again |
 | `DeploymentExists … Please use a different name` | Name already used. `--package-version` doesn't update a deployment | Deploy as `…_v2`, or delete the old transform and deployment first |
 | `DeploymentExists` after a deploy failed halfway | The deployment record is created before zip and upload | Fix the cause, then delete the record or use a new name |

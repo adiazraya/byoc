@@ -24,17 +24,6 @@ Official reference: [Set Up Salesforce CLI for Code Extension](https://developer
 | `salesforce-data-customcode` SDK | Latest | Python library and local Spark runner | Project `.venv` only |
 | `pipreqs` | Latest | Used by `script scan` to detect your imports | Project `.venv` only |
 | Azul Zulu OpenJDK | **17.x** | PySpark needs a JVM for local runs | Side by side, per terminal |
-| Docker Desktop | Latest | **Optional for this lab.** See [Do I need Docker?](#do-i-need-docker) | Global |
-
-### Do I need Docker?
-
-Not for this lab. The official guide lists Docker Desktop as a prerequisite, but we checked the plugin's behaviour:
-
-- `script run` and `script scan` never use Docker.
-- `script zip` (and `script deploy`, which runs zip internally) uses Docker **only when `requirements.txt` lists at least one package**. It then builds the dependencies in a Linux container, so compiled wheels match the Data 360 runtime.
-- This lab's script uses only the Python standard library and PySpark, which the runtime already provides, so `requirements.txt` has no packages. Zip prints `Skipping dependency archive: requirements.txt is missing or empty` and doesn't call Docker.
-
-Install Docker Desktop if you'll add third-party packages to your own scripts later. On Windows, enable the **WSL 2 backend**. What happens without it is covered in [4. Package and deploy](04-package-and-deploy.md#if-your-script-needs-extra-packages-docker).
 
 ## Org prerequisites
 

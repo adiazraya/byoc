@@ -66,21 +66,6 @@ Archive size: 1.88 KB
 - It contains everything under `payload/` except `.DS_Store`, symlinks and `external_callout_config.json`. Here that's `config.json` and `entrypoint.py`. List it with `tar -tf deployment.zip`, which works on macOS and on Windows 10 and later. If you also see `__pycache__/…`, created when something imported the script, delete `payload/__pycache__` and zip again. Deploy uploads whatever is in `payload/`.
 - **Deploy rebuilds the zip itself**, so this step is only a check that the package builds, and a way to see what will be uploaded.
 
-### If your script needs extra packages (Docker)
-
-This lab doesn't need any. In your own scripts, when `requirements.txt` lists a package, zip (and deploy) builds those dependencies in a **Linux container**:
-
-1. It builds a Docker image named `datacloud-custom-code-dependency-builder` from `Dockerfile.dependencies` (`linux/amd64`, Amazon EMR 7.3 Spark base image). This happens only the first time.
-2. It runs `build_native_dependencies.sh` in that container, then adds `payload/archives/native_dependencies.tar.gz` to the zip.
-
-Docker Desktop must be **installed and running** for that. Keep `Dockerfile.dependencies` and `build_native_dependencies.sh` in the package folder.
-
-> **You may face:** `Building docker image with docker network: default...` followed by `Error (ZipExecutionFailed): Failed to create archive for package at './payload':`, with nothing after the colon. `requirements.txt` lists a package and Docker isn't installed or isn't running. Start Docker Desktop (on Windows, with the WSL 2 backend), or remove the package from `requirements.txt` if you don't need it.
->
-> **You may face:** `DependencyBuildFileMissing … 'build_native_dependencies.sh' was not found`. The Docker build files were deleted from the package folder. Restore them from this repo.
->
-> **You may face (Apple silicon Macs):** a very slow first zip. The image is `linux/amd64`, so Docker emulates it. Later zips reuse the image.
-
 ## Step 3: Deploy
 
 macOS:
@@ -137,7 +122,7 @@ Data Code Extension deployment completed successfully!
 >
 > **You may face:** `Error (DeploymentExists): Deployment patient_xml_transform exists. Please use a different name.` A Code Extension with that name already exists, for example from an earlier attempt. See [Redeploying](#redeploying-a-new-version).
 >
-> **You may face:** a deploy that fails **after** `Creating deployment '…'`, during zip or upload. The deployment record already exists in the org, so the next attempt with the same name fails with `DeploymentExists`. Fix the cause first (usually Docker, see Step 2), then delete the half-created deployment ([Cleanup](#cleanup)) or deploy under a new name.
+> **You may face:** a deploy that fails **after** `Creating deployment '…'`, during zip or upload. The deployment record already exists in the org, so the next attempt with the same name fails with `DeploymentExists`. Fix the cause first, then delete the half-created deployment ([Cleanup](#cleanup)) or deploy under a new name.
 >
 > **You may face:** `The deployment request returned no file upload URL`. The org or your user can't create Code Extension deployments. Check the Data Cloud Architect permission set and Feature Manager.
 >
