@@ -95,7 +95,7 @@ The parsing logic itself didn't change.
 
 ## Step 4: Run the script locally
 
-Enter the environment first ([Setup, Step 8](01-setup.md#step-8-enter-the-project-environment-with-one-command)), then run the script from the **package folder**.
+Enter the environment first ([Setup, Part B](01-setup.md#part-b-every-new-terminal)), then run the script from the **package folder**.
 
 macOS:
 

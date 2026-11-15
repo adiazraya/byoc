@@ -2,6 +2,15 @@
 
 [← README](../README.md) · Next: [2. Authorize your org →](02-authorize-org.md)
 
+## How this page is organized
+
+| Part | When | What |
+|---|---|---|
+| [**Part A: One-time installation**](#part-a-one-time-installation) | Once per laptop | Steps 1–7 install the tools and create the project's Python environment |
+| [**Part B: Every new terminal**](#part-b-every-new-terminal) | Every time you open a terminal for this lab | One command re-enters the environment, plus a preflight check |
+
+Part B comes after Part A because it needs what Part A creates (the `.venv` and Java 17). In Steps 5 and 6 you activate the venv by hand. From then on, Part B does it for you.
+
 ## Goal and guiding principle
 
 Code Extension needs **exactly Python 3.11** and **Java 17**. You'll get both **without changing your laptop's defaults**:
@@ -34,7 +43,11 @@ Official reference: [Set Up Salesforce CLI for Code Extension](https://developer
 
 ---
 
-## Step 1: Salesforce CLI
+## Part A: One-time installation
+
+Do Steps 1–7 once. If a step is already done on your machine, skip it.
+
+### Step 1: Salesforce CLI
 
 ```bash
 sf version
@@ -46,7 +59,7 @@ If `sf` isn't found or the version is below 2.130.9, install it from [Install Sa
 >
 > **You may face (Windows):** `sf` isn't recognized right after installing. The installer updated `PATH`, but only new terminals see it. Open a new terminal.
 
-## Step 2: Node.js (Windows only)
+### Step 2: Node.js (Windows only)
 
 Install [Node.js LTS](https://nodejs.org/en/download), then check it:
 
@@ -57,7 +70,7 @@ npm --version
 
 > **You may face (macOS):** `node` works but you get `npm: command not found`. This means a partial Node install. You can ignore it, because `sf` bundles its own Node and npm.
 
-## Step 3: Code Extension plugin
+### Step 3: Code Extension plugin
 
 ```bash
 sf plugins install @salesforce/plugin-data-code-extension
@@ -84,7 +97,7 @@ The output must list `data-code-extension` at version 0.1.5 or later.
 > sf plugins install @salesforce/plugin-data-code-extension@<version>
 > ```
 
-## Step 4: Install uv
+### Step 4: Install uv
 
 macOS:
 
@@ -102,7 +115,7 @@ Open a new terminal and run `uv --version`.
 
 > **Why uv?** To get Python 3.11, the official guide suggests pyenv on macOS, or python.org, the Microsoft Store or pyenv-win on Windows. uv does the same job with one tool on both platforms. It downloads the interpreter itself, keeps it out of your system Python and installs heavy dependencies (pyspark, pandas) much faster.
 
-## Step 5: Clone the lab and create the Python 3.11 environment
+### Step 5: Clone the lab and create the Python 3.11 environment
 
 The commands are the same on both platforms:
 
@@ -130,7 +143,7 @@ python --version           # Python 3.11.x
 python3 --version          # must ALSO print 3.11.x
 ```
 
-> **You may face:** `Error (PythonVersionMismatch): Python version 3.15.0 is installed, but exactly version 3.11 is required`. The plugin checks `python3` first, then `python`, on your `PATH`. It accepts **only** 3.11, so newer versions fail too, because Data 360 runs your code on 3.11. Don't downgrade your system Python. Activate the venv in every project terminal instead (Step 8 makes this one command).
+> **You may face:** `Error (PythonVersionMismatch): Python version 3.15.0 is installed, but exactly version 3.11 is required`. The plugin checks `python3` first, then `python`, on your `PATH`. It accepts **only** 3.11, so newer versions fail too, because Data 360 runs your code on 3.11. Don't downgrade your system Python. Activate the venv in every project terminal instead ([Part B](#part-b-every-new-terminal) makes this one command).
 >
 > **You may face:** `Error (PackageNotInstalled): Required package 'salesforce-data-customcode' is not installed`, even though `uv pip show` finds it. By default, `uv venv` creates environments **without pip**, and the plugin checks the SDK with `pip`/`python3 -m pip show`. The `--seed` flag above adds pip. If you already created the venv without it, run `uv pip install pip`.
 >
@@ -138,7 +151,7 @@ python3 --version          # must ALSO print 3.11.x
 >
 > **You may face (Windows):** `python3` opens the Microsoft Store, or `python3 --version` prints nothing. Windows ships "App execution aliases" that shadow the venv's `python3`. Turn off the `python.exe` and `python3.exe` entries in **Settings → Apps → Advanced app settings → App execution aliases**, then open a new terminal.
 
-## Step 6: Install the SDK inside the venv
+### Step 6: Install the SDK inside the venv
 
 With the venv active, inside `patient-xml-transform`:
 
@@ -151,7 +164,7 @@ The official guide uses `python3.11 -m pip install …` on macOS or `py -3.11 -m
 
 `pipreqs` isn't in the official list. `script scan` calls it to work out which packages your script imports, and without it scan fails (see [Step 1 of the deploy doc](04-package-and-deploy.md#step-1-scan)).
 
-## Step 7: Java 17 (Azul Zulu)
+### Step 7: Java 17 (Azul Zulu)
 
 macOS:
 
@@ -169,15 +182,19 @@ dir "C:\Program Files\Zulu"        # a zulu-17… folder must be there
 
 Installers are also available at [azul.com/downloads](https://www.azul.com/downloads/?version=java-17-lts&package=jdk). See also [Installing Azul Zulu on Windows](https://docs.azul.com/core/install/windows).
 
-> **You may face:** `spark-class: line 97: CMD: bad array subscript`, `head: illegal line count -- -1` and `[JAVA_GATEWAY_EXITED] Java gateway process exited before sending its port number` on the first local run. PySpark can't find a usable JDK. Install Zulu 17 and set `JAVA_HOME` in the same terminal, which Step 8 does for you.
+> **You may face:** `spark-class: line 97: CMD: bad array subscript`, `head: illegal line count -- -1` and `[JAVA_GATEWAY_EXITED] Java gateway process exited before sending its port number` on the first local run. PySpark can't find a usable JDK. Install Zulu 17 and set `JAVA_HOME` in the same terminal, which [Part B](#part-b-every-new-terminal) does for you.
 >
 > **You may face (Windows):** `WARN Shell: Did not find winutils.exe` / `HADOOP_HOME and hadoop.home.dir are unset`. Local Spark looks for Hadoop helpers. This is usually harmless, because the lab reads and writes Data 360, not your local disk. Only if a local file write fails, put `winutils.exe` in `C:\hadoop\bin` and set `$env:HADOOP_HOME="C:\hadoop"`.
 >
-> **You may face (Windows):** `Python worker failed to connect back`. Spark started the wrong Python for its workers. Set `PYSPARK_PYTHON` to the venv's Python, which Step 8 also does.
+> **You may face (Windows):** `Python worker failed to connect back`. Spark started the wrong Python for its workers. Set `PYSPARK_PYTHON` to the venv's Python, which [Part B](#part-b-every-new-terminal) also does.
 
-## Step 8: Enter the project environment with one command
+---
 
-Do this **in every new terminal**, from the repository root (`byoc/`). The scripts change nothing globally.
+## Part B: Every new terminal
+
+Part A installed everything. Now you only need to **enter the environment**: do this **every time you open a new terminal** for the lab, from the repository root (`byoc/`). You don't repeat any install. The scripts change nothing globally, and closing the terminal undoes them.
+
+Try it now, right after Step 7.
 
 macOS: [`env.sh`](../env.sh)
 
@@ -205,9 +222,9 @@ Each script:
 >
 > **Note:** `uv run sf data-code-extension …` also runs inside the venv without activating it, but you still need Java 17 on `JAVA_HOME`. The env scripts handle both, so the rest of the lab assumes you used them.
 
-## Step 9: Run the preflight check
+### Preflight check
 
-From the repository root:
+Whenever something looks wrong, and once after Part A, run this from the repository root:
 
 macOS:
 

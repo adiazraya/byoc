@@ -48,7 +48,7 @@ if ($pluginLine -and ($pluginLine -match '^data-code-extension\s+(\d+\.\d+\.\d+)
 # 3. Python 3.11 active. The plugin tries python3 first, then python, so check both.
 foreach ($cmd in 'python3', 'python') {
     $exe = Get-Command $cmd -ErrorAction SilentlyContinue
-    if (-not $exe) { Fail "$cmd not found" 'Run: . .\env.ps1   (docs/01-setup.md, Step 8)'; continue }
+    if (-not $exe) { Fail "$cmd not found" 'Run: . .\env.ps1   (docs/01-setup.md, Part B)'; continue }
     $out = (& $cmd --version 2>&1) -join ' '
     if ($out -match 'Python 3\.11\.\d+') { Pass "$cmd is $($Matches[0]) ($($exe.Source))" }
     else { Fail "$cmd reports '$out' (need exactly 3.11)" 'Run: . .\env.ps1 ; also disable the python/python3 App execution aliases (docs/01-setup.md, Step 5)' }
@@ -79,7 +79,7 @@ if ($javaExe -and (Test-Path $javaExe)) {
     if ($jv -match '"17[.\d_]*"') { Pass "JAVA_HOME is Java 17 ($env:JAVA_HOME)" }
     else { Fail "JAVA_HOME points to '$jv' (need 17)" 'Run: . .\env.ps1   (docs/01-setup.md, Step 7)' }
 } else {
-    Fail 'JAVA_HOME not set or not a JDK' 'Run: . .\env.ps1   (docs/01-setup.md, Steps 7-8)'
+    Fail 'JAVA_HOME not set or not a JDK' 'Run: . .\env.ps1   (docs/01-setup.md, Step 7 and Part B)'
 }
 
 # 8. Org alias authorized and connected

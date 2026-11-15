@@ -48,7 +48,7 @@ fi
 PY_VER="$(python3 --version 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
 case "$PY_VER" in
   3.11.*) pass "python3 is $PY_VER ($(command -v python3))" ;;
-  *) fail "python3 is ${PY_VER:-missing} (need exactly 3.11)" "Run: source ./env.sh   (docs/01-setup.md, Step 8)" ;;
+  *) fail "python3 is ${PY_VER:-missing} (need exactly 3.11)" "Run: source ./env.sh   (docs/01-setup.md, Part B)" ;;
 esac
 
 # 4. A virtual environment is active
@@ -88,7 +88,7 @@ if [ -n "${JAVA_HOME:-}" ] && [ -x "$JAVA_HOME/bin/java" ]; then
     *) fail "JAVA_HOME is Java ${J_VER:-unknown} (need 17)" "Run: source ./env.sh   (docs/01-setup.md, Step 7)" ;;
   esac
 else
-  fail "JAVA_HOME not set or not a JDK" "Run: source ./env.sh   (docs/01-setup.md, Steps 7-8)"
+  fail "JAVA_HOME not set or not a JDK" "Run: source ./env.sh   (docs/01-setup.md, Step 7 and Part B)"
 fi
 
 # 8. Org alias authorized and connected

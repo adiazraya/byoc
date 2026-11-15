@@ -37,11 +37,13 @@ The script parses each XML blob, creates one row per `<Patient>` and derives cle
 
 | Step | Doc | What you do | Time |
 |---|---|---|---|
-| 1 | [docs/01-setup.md](docs/01-setup.md) | Install the CLI, the plugin, uv, Python 3.11 and Java 17 without touching your system defaults | 20–30 min |
+| 1 | [docs/01-setup.md](docs/01-setup.md) | **Part A (once):** install the CLI, the plugin, uv, Python 3.11 and Java 17 without touching your system defaults. **Part B (every new terminal):** one command to re-enter the environment | 20–30 min |
 | 2 | [docs/02-authorize-org.md](docs/02-authorize-org.md) | Connect your Data 360 org to the CLI as `byoc-org` | 5 min |
 | 3 | [docs/03-run-locally.md](docs/03-run-locally.md) | Load the sample XML, create the DLOs, run the script locally | 20 min |
 | 4 | [docs/04-package-and-deploy.md](docs/04-package-and-deploy.md) | Scan, zip, deploy, run the batch data transform, check results and logs | 20 min |
 | – | [docs/troubleshooting.md](docs/troubleshooting.md) | Every error we hit while building this lab, with the fix | – |
+
+**Opening a new terminal later?** Don't reinstall anything. From the repository root, run `source ./env.sh` (macOS) or `. .\env.ps1` (Windows). That's [Part B of the setup](docs/01-setup.md#part-b-every-new-terminal).
 
 Run `./verify.sh` (macOS) or `.\verify.ps1` (Windows) at any point to check your environment.
 
