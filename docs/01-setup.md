@@ -162,7 +162,7 @@ python -m pip show salesforce-data-customcode
 
 The official guide uses `python3.11 -m pip install …` on macOS or `py -3.11 -m pip install …` on Windows. Inside the active venv, `uv pip install` does the same and keeps the SDK out of your global Python. The first install pulls in pyspark, pandas and numpy, so it can take a few minutes.
 
-`pipreqs` isn't in the official list. `script scan` calls it to work out which packages your script imports, and without it scan fails (see [Step 1 of the deploy doc](04-package-and-deploy.md#step-1-scan)).
+`pipreqs` isn't in the official list. `script scan` calls it to work out which packages your script imports, and without it scan fails (see [Step 1 of the deploy doc](05-package-and-deploy.md#step-1-scan)).
 
 ### Step 7: Java 17 (Azul Zulu)
 

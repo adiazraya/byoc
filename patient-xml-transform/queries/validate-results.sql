@@ -22,9 +22,9 @@ FROM "Patients_Enriched__dll"
 ORDER BY "patient_id__c";
 
 -- 5. Latest log lines for the transform (newest first).
---    Replace patient_xml_transform if you deployed with a different --name.
+--    Replace Patient_Data_Transformer if you deployed with a different --name.
 SELECT "Timestamp__c", "Message__c"
 FROM "DataCustomCodeLogs__dll"
-WHERE "DataCustomCodeName__c" = 'patient_xml_transform'
+WHERE "DataCustomCodeName__c" = 'Patient_Data_Transformer'
 ORDER BY "Timestamp__c" DESC
 LIMIT 100;

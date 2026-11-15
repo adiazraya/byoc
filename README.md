@@ -35,13 +35,23 @@ The script parses each XML blob, creates one row per `<Patient>` and derives cle
 
 ## Lab path
 
-| Step | Doc | What you do | Time |
-|---|---|---|---|
-| 1 | [docs/01-setup.md](docs/01-setup.md) | **Part A (once):** install the CLI, the plugin, uv, Python 3.11 and Java 17 without touching your system defaults. **Part B (every new terminal):** one command to re-enter the environment | 20–30 min |
-| 2 | [docs/02-authorize-org.md](docs/02-authorize-org.md) | Connect your Data 360 org to the CLI as `byoc-org` | 5 min |
-| 3 | [docs/03-run-locally.md](docs/03-run-locally.md) | Load the sample XML, create the DLOs, run the script locally | 20 min |
-| 4 | [docs/04-package-and-deploy.md](docs/04-package-and-deploy.md) | Scan, zip, deploy, run the batch data transform, check results and logs | 20 min |
-| – | [docs/troubleshooting.md](docs/troubleshooting.md) | Every error we hit while building this lab, with the fix | – |
+| Step | Doc | What you do | Type | Time |
+|---|---|---|---|---|
+| 1 | [docs/01-setup.md](docs/01-setup.md) | **Part A (once):** install the CLI, the plugin, uv, Python 3.11 and Java 17 without touching your system defaults. **Part B (every new terminal):** one command to re-enter the environment | 🔧 | 20–30 min |
+| 2 | [docs/02-authorize-org.md](docs/02-authorize-org.md) | Connect your Data 360 org to the CLI as `byoc-org` | 🔧 | 5 min |
+| 3 | [docs/03-prepare-data.md](docs/03-prepare-data.md) | Upload the sample CSV (data stream and source DLO) and create the target DLO | 🩺 | 15 min |
+| 4 | [docs/04-run-locally.md](docs/04-run-locally.md) | Run the script on your laptop against the real data | 🔧 | 10 min |
+| 5 | [docs/05-package-and-deploy.md](docs/05-package-and-deploy.md) | Scan, zip, deploy, run the batch data transform, check results and logs | 🔧 (validation 🩺) | 20 min |
+| – | [docs/troubleshooting.md](docs/troubleshooting.md) | Every error we hit while building this lab, with the fix | – | – |
+
+### 🔧 Technical vs 🩺 use case
+
+Every step and section in the docs carries one of two labels:
+
+- 🔧 **Technical:** how Code Extension works. It's identical for any example: environment, org login, running locally, scan, zip, deploy, transform, logs.
+- 🩺 **Use case:** specific to the patient-XML example: the sample CSV, the DLO names and fields, the parsing logic, the expected results (4 batches, 12 patients, COVID Yes = 5 / No = 7).
+
+**Building your own example?** Keep everything marked 🔧. Replace what's marked 🩺: the data and source DLO (step 3), the target DLO and its fields (step 3), the logic in `payload/entrypoint.py` (the table in [step 4](docs/04-run-locally.md#step-1-know-what-the-script-does) shows which parts), the `--name` and `--description` when you deploy, and the expected results you validate.
 
 **Opening a new terminal later?** Don't reinstall anything. From the repository root, run `source ./env.sh` (macOS) or `. .\env.ps1` (Windows). That's [Part B of the setup](docs/01-setup.md#part-b-every-new-terminal).
 
@@ -52,7 +62,7 @@ Run `./verify.sh` (macOS) or `.\verify.ps1` (Windows) at any point to check your
 ```
 .
 ├── README.md
-├── docs/                         Lab instructions (start with 01-setup.md)
+├── docs/                         Lab instructions (start with 01-setup.md); images/ holds the screenshots
 ├── env.sh / env.ps1              Enter the project environment in one command
 ├── verify.sh / verify.ps1        Preflight check (tools, versions, org connection)
 └── patient-xml-transform/        The Code Extension package; run all sf commands from here

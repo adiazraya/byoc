@@ -33,7 +33,7 @@ Every error we hit while building this lab, grouped by stage. Before anything el
 | `InvalidProjectWorkspaceError` on `sf config set target-org` | The lab folder isn't an SFDX project | Don't use `--global`. Pass `-o byoc-org` on every command |
 | `401` / `403` / `INSUFFICIENT_ACCESS` on run | Missing permission set, or Data 360 not available to the user | Assign Data Cloud Architect; check Feature Manager |
 
-## Local run ([03-run-locally.md](03-run-locally.md))
+## Data preparation ([03-prepare-data.md](03-prepare-data.md)) and local run ([04-run-locally.md](04-run-locally.md))
 
 | Symptom | Cause | Fix |
 |---|---|---|
@@ -45,9 +45,9 @@ Every error we hit while building this lab, grouped by stage. Before anything el
 | `ModuleNotFoundError` | Package not installed in the venv. `--dependencies` installs nothing | `uv pip install <pkg>`; add it to `requirements.txt` |
 | `zsh: no such file or directory: type` | Ran the hint `sf data-code-extension <type> scan` literally | `sf data-code-extension script scan --entrypoint ./payload/entrypoint.py` |
 | `WARN NativeCodeLoader: Unable to load native-hadoop library` | Local Spark has no native Hadoop | Harmless |
-| Target DLO still empty after a successful local run | Expected: the local writer only validates columns and prints | Deploy and run the transform ([04](04-package-and-deploy.md)) |
+| Target DLO still empty after a successful local run | Expected: the local writer only validates columns and prints | Deploy and run the transform ([04](05-package-and-deploy.md)) |
 
-## Scan, zip and deploy ([04-package-and-deploy.md](04-package-and-deploy.md))
+## Scan, zip and deploy ([05-package-and-deploy.md](05-package-and-deploy.md))
 
 | Symptom | Cause | Fix |
 |---|---|---|
@@ -64,7 +64,7 @@ Every error we hit while building this lab, grouped by stage. Before anything el
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| `CANNOT_SAFELY_CAST … 'name__c' "STRING" to "DECIMAL(38,18)"` | Target field created with the wrong type (Number instead of Text). Local runs don't check types | Delete the transform, recreate the DLO with the right types, recreate the transform ([04](04-package-and-deploy.md#errors-you-may-hit-in-the-deployed-run)) |
+| `CANNOT_SAFELY_CAST … 'name__c' "STRING" to "DECIMAL(38,18)"` | Target field created with the wrong type (Number instead of Text). Local runs don't check types | Delete the transform, recreate the DLO with the right types, recreate the transform ([04](05-package-and-deploy.md#errors-you-may-hit-in-the-deployed-run)) |
 | Traceback spread over many rows of `^` | One log row per output line | Look at the `Failed to startup:` row (`queries/errors-only.json`) |
 | `SDK config file not found at /mnt/customer-code/…` (DEBUG) | Informational | Harmless |
 | Run succeeded, target looks empty | Wrong data space in Query Editor, or queried too early | Select `default`; query after `Success` |

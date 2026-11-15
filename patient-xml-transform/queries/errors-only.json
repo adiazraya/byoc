@@ -1,1 +1,1 @@
-{"sql": "SELECT \"Timestamp__c\", \"Message__c\" FROM \"DataCustomCodeLogs__dll\" WHERE \"DataCustomCodeName__c\" = 'patient_xml_transform' AND (\"Message__c\" LIKE '%Error%' OR \"Message__c\" LIKE '%Exception%' OR \"Message__c\" LIKE 'Failed%') ORDER BY \"Timestamp__c\" DESC LIMIT 20"}
+{"sql": "SELECT \"Timestamp__c\", \"Message__c\" FROM \"DataCustomCodeLogs__dll\" WHERE \"DataCustomCodeName__c\" = 'Patient_Data_Transformer' AND (\"Message__c\" LIKE '%Error%' OR \"Message__c\" LIKE '%Exception%' OR \"Message__c\" LIKE 'Failed%') ORDER BY \"Timestamp__c\" DESC LIMIT 20"}
