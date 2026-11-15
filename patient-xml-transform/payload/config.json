@@ -1,0 +1,17 @@
+{
+  "sdkVersion": "7.0.0",
+  "entryPoint": "entrypoint.py",
+  "dataspace": "default",
+  "permissions": {
+    "read": {
+      "dlo": [
+        "Patients_Raw_XML__dll"
+      ]
+    },
+    "write": {
+      "dlo": [
+        "Patients_Enriched__dll"
+      ]
+    }
+  }
+}

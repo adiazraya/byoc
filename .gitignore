@@ -1,0 +1,39 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Code Extension build output (zip and Docker-built dependency archives)
+*.zip
+payload/archives/
+payload/py-files/
+
+# Salesforce CLI local state: project config, auth and cache
+.sf/
+.sfdx/
+sfdx-project.json
+
+# Credentials and local secrets
+.env
+.env.*
+*.pem
+*.key
+*.crt
+credentials.json
+external_callout_config.json
+sfdx-auth-url*.txt
+auth.json
+
+# Exported query results (may contain record data)
+*.results.csv
+custom_code_logs.csv
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

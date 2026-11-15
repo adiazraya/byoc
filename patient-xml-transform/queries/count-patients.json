@@ -1,0 +1,1 @@
+{"sql": "SELECT COUNT(*) AS patients FROM \"Patients_Enriched__dll\""}
